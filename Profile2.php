@@ -13,16 +13,14 @@ if(isset($_POST["json"])){
     $uname = $jsonobj->{'uname'};
     $sql_query = "Select uname from user_info where key1 like '$key'";
     $result = mysqli_query($con,$sql_query);
-    while($row5 = mysqli_fetch_array($result))
-    {
-     if(!strcmp($row5['uname'],$uname))
-     {
-     $firstname=null;
-     $lastname=null;
-     $profilepic=null;
-     $count1=null;
-     $count2=null;
-            $sql_query1 = "Select firstname,lastname,profilepic from user_info where uname like '$uname'";
+    $firstname=null;
+    $lastname=null;
+    $profilepic=null;
+    $count1=null;
+    $count2=null;
+    while($row = mysqli_fetch_array($result)){
+        if(!strcmp($row['uname'],$uname)){
+            $sql_query1 = "Select firstname,lastname,profilepic from user_info where key1 like '$key'";
             $res1 = mysqli_query($con,$sql_query1);
             
             $sql_query2 = "Select count(funame) from following where uname like '$uname'";
@@ -43,6 +41,7 @@ if(isset($_POST["json"])){
                 $count2=$row3['count(uname)'];
             }
             
+        }
         class resp {
             public $firstname;
             public $lastname;
@@ -64,12 +63,6 @@ if(isset($_POST["json"])){
         $responseclass->count2 = $count2;
         $jsonsend = json_encode(get_object_vars($responseclass));
         echo $jsonsend;
-     }
-     else
-     {
-         echo 'Failed';
-     }
-     
     }
 }
 ?>
